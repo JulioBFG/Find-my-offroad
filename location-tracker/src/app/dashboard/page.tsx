@@ -4,13 +4,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
+import "leaflet/dist/leaflet.css";
 import Map from "@/components/Map";
 import dynamic from "next/dynamic";
 
-// Carregamento dinâmico do mapa (para evitar problemas SSR)
 const DynamicMap = dynamic(() => Promise.resolve(Map), {
   ssr: false,
-  loading: () => <p>Carregando mapa...</p>
 });
 
 export default function DashboardPage() {

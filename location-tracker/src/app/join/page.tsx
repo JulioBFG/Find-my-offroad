@@ -1,13 +1,14 @@
 // src/app/join/page.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-export default function JoinGroupPage() {
+// Componente interno que usa o useSearchParams
+function JoinGroupContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { user, loading, joinGroup } = useAuth();
@@ -16,6 +17,7 @@ export default function JoinGroupPage() {
   const [groupId, setGroupId] = useState("");
 
   useEffect(() => {
+    // Pegar o ID do grupo da URL
     const groupParam = searchParams.get("group");
     if (groupParam) {
       setGroupId(groupParam);
@@ -23,6 +25,7 @@ export default function JoinGroupPage() {
   }, [searchParams]);
 
   useEffect(() => {
+    // Redirecionar para login se não estiver autenticado
     if (!loading && !user) {
       router.push(`/login?redirectTo=/join?group=${groupId}`);
     }
@@ -34,7 +37,6 @@ export default function JoinGroupPage() {
     try {
       await joinGroup(groupId);
       setSuccess(true);
-      // Redirecionar para o dashboard após um breve momento
       setTimeout(() => {
         router.push("/dashboard");
       }, 2000);
@@ -94,5 +96,13 @@ export default function JoinGroupPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function JoinGroupPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen">Carregando...</div>}>
+      <JoinGroupContent />
+    </Suspense>
   );
 }

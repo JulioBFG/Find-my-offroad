@@ -1,6 +1,7 @@
+// src/app/signup/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
@@ -11,8 +12,28 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { signUp } = useAuth();
+  const [redirectTo, setRedirectTo] = useState("/dashboard");
+  const [isClient, setIsClient] = useState(false);
+  const { signUp, user } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    setIsClient(true);
+
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectParam = urlParams.get("redirectTo");
+      if (redirectParam) {
+        setRedirectTo(redirectParam);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user && isClient) {
+      router.push(redirectTo);
+    }
+  }, [user, router, redirectTo, isClient]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +41,7 @@ export default function SignupPage() {
 
     try {
       await signUp(email, password, name);
-      router.push("/dashboard");
+      router.push(redirectTo);
     } catch (err: unknown) {
       const error = err instanceof Error ? err.message : "Falha ao criar conta";
       setError(error);
@@ -90,9 +111,14 @@ export default function SignupPage() {
         <div className="text-center mt-4">
           <p>
             Já tem uma conta?{" "}
-            <Link href="/login" className="text-blue-600 hover:underline">
-              Faça login
-            </Link>
+            {isClient && (
+              <Link
+                href={`/login?redirectTo=${encodeURIComponent(redirectTo)}`}
+                className="text-blue-600 hover:underline"
+              >
+                Faça login
+              </Link>
+            )}
           </p>
         </div>
       </div>

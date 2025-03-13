@@ -1,8 +1,7 @@
-// src/app/login/page.tsx (modificado)
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -11,17 +10,28 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [redirectTo, setRedirectTo] = useState("/dashboard");
+  const [isClient, setIsClient] = useState(false);
   const { signIn, user } = useAuth();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") || "/dashboard";
 
-  // Redirecionar se já estiver autenticado
   useEffect(() => {
-    if (user) {
+    setIsClient(true);
+
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectParam = urlParams.get("redirectTo");
+      if (redirectParam) {
+        setRedirectTo(redirectParam);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user && isClient) {
       router.push(redirectTo);
     }
-  }, [user, router, redirectTo]);
+  }, [user, router, redirectTo, isClient]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,9 +95,14 @@ export default function LoginPage() {
         <div className="text-center mt-4">
           <p>
             Não tem uma conta?{" "}
-            <Link href={`/signup?redirectTo=${encodeURIComponent(redirectTo)}`} className="text-blue-600 hover:underline">
-              Registre-se
-            </Link>
+            {isClient && (
+              <Link
+                href={`/signup?redirectTo=${encodeURIComponent(redirectTo)}`}
+                className="text-blue-600 hover:underline"
+              >
+                Registre-se
+              </Link>
+            )}
           </p>
         </div>
       </div>

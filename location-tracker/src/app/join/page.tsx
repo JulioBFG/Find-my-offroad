@@ -1,35 +1,36 @@
-// src/app/join/page.tsx
 "use client";
 
-import { useEffect, useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-// Componente interno que usa o useSearchParams
-function JoinGroupContent() {
-  const searchParams = useSearchParams();
+export default function JoinGroupPage() {
   const router = useRouter();
   const { user, loading, joinGroup } = useAuth();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [groupId, setGroupId] = useState("");
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // Pegar o ID do grupo da URL
-    const groupParam = searchParams.get("group");
-    if (groupParam) {
-      setGroupId(groupParam);
+    setIsClient(true);
+
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const groupParam = urlParams.get("group");
+      if (groupParam) {
+        setGroupId(groupParam);
+      }
     }
-  }, [searchParams]);
+  }, []);
 
   useEffect(() => {
-    // Redirecionar para login se não estiver autenticado
-    if (!loading && !user) {
+    if (!loading && !user && isClient) {
       router.push(`/login?redirectTo=/join?group=${groupId}`);
     }
-  }, [user, loading, router, groupId]);
+  }, [user, loading, router, groupId, isClient]);
 
   const handleJoinGroup = async () => {
     if (!groupId) return;
@@ -46,12 +47,12 @@ function JoinGroupContent() {
     }
   };
 
-  if (loading) {
+  if (!isClient || loading) {
     return <div className="flex justify-center items-center h-screen">Carregando...</div>;
   }
 
   if (!user) {
-    return null; // Redirecionando para login
+    return null;
   }
 
   return (
@@ -96,13 +97,5 @@ function JoinGroupContent() {
         )}
       </div>
     </div>
-  );
-}
-
-export default function JoinGroupPage() {
-  return (
-    <Suspense fallback={<div className="flex justify-center items-center h-screen">Carregando...</div>}>
-      <JoinGroupContent />
-    </Suspense>
   );
 }

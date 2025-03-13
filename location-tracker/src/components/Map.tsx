@@ -80,21 +80,21 @@ const Map = () => {
   const [linkCopied, setLinkCopied] = useState<boolean>(false);
 
   useEffect(() => {
-    if (user?.groupId) {
+    if (user?.groupId && typeof window !== 'undefined') {
       const baseUrl = window.location.origin;
       const joinLink = `${baseUrl}/join?group=${user.groupId}`;
       setGroupShareLink(joinLink);
     }
   }, [user]);
 
-  // Função para copiar o link
   const copyShareLink = () => {
-    navigator.clipboard.writeText(groupShareLink);
-    setLinkCopied(true);
-    setTimeout(() => setLinkCopied(false), 2000);
+    if (typeof window !== 'undefined') {
+      navigator.clipboard.writeText(groupShareLink);
+      setLinkCopied(true);
+      setTimeout(() => setLinkCopied(false), 2000);
+    }
   };
 
-  // Atualiza a localização do usuário
   useEffect(() => {
     if (!user) return;
 
@@ -106,7 +106,6 @@ const Map = () => {
           const { latitude, longitude } = position.coords;
           setUserPosition([latitude, longitude]);
 
-          // Enviar para o Firebase
           const userLocRef = ref(database, `locations/${user.uid}`);
           set(userLocRef, {
             id: user.uid,
@@ -197,7 +196,8 @@ const Map = () => {
       </div>
 
       <MapContainer
-        center={userPosition[0] !== 0 ? userPosition : [-23.55052, -46.633308]} // São Paulo como padrão
+        center={userPosition[0] !== 0 ? userPosition : [-23.55052, -46.633308]}
+        zoom={13}
         style={{ height: "100%", width: "100%" }}
       >
         <TileLayer

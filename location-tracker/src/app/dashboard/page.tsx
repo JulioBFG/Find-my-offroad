@@ -34,8 +34,9 @@ export default function DashboardPage() {
     try {
       await joinGroup(groupId);
       setGroupId("");
-    } catch (err: any) {
-      setError(err.message || "Falha ao entrar no grupo");
+    } catch (err: Error | unknown) {
+      const error = err instanceof Error ? err.message : "Falha ao entrar no grupo";
+      setError(error);
     }
   };
 
@@ -47,8 +48,9 @@ export default function DashboardPage() {
       await createGroup(groupName);
       setGroupName("");
       setShowCreateGroup(false);
-    } catch (err: any) {
-      setError(err.message || "Falha ao criar grupo");
+    } catch (err: Error | unknown) {
+      const error = err instanceof Error ? err.message : "Falha ao criar grupo";
+      setError(error);
     }
   };
 

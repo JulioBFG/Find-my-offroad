@@ -21,8 +21,9 @@ export default function SignupPage() {
     try {
       await signUp(email, password, name);
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Falha ao criar conta");
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err.message : "Falha ao criar conta";
+      setError(error);
     }
   };
 

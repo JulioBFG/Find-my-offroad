@@ -75,12 +75,10 @@ const Map = () => {
   const { user } = useAuth();
   const [groupUsers, setGroupUsers] = useState<User[]>([]);
   const [userPosition, setUserPosition] = useState<[number, number]>([0, 0]);
-  const [currentZoom, setCurrentZoom] = useState<number>(13);
   const [isTracking, setIsTracking] = useState<boolean>(false);
   const [groupShareLink, setGroupShareLink] = useState<string>("");
   const [linkCopied, setLinkCopied] = useState<boolean>(false);
 
-  // Gerar link para compartilhar o grupo
   useEffect(() => {
     if (user?.groupId) {
       const baseUrl = window.location.origin;
@@ -142,7 +140,7 @@ const Map = () => {
 
       // Filtrar apenas os usuários do mesmo grupo
       const groupMembers = Object.values<User>(data).filter(
-        (member: any) => member.groupId === user.groupId
+        (member: User) => member.groupId === user.groupId
       );
 
       setGroupUsers(groupMembers);
@@ -200,7 +198,6 @@ const Map = () => {
 
       <MapContainer
         center={userPosition[0] !== 0 ? userPosition : [-23.55052, -46.633308]} // São Paulo como padrão
-        zoom={currentZoom}
         style={{ height: "100%", width: "100%" }}
       >
         <TileLayer

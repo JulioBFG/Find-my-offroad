@@ -30,8 +30,9 @@ export default function LoginPage() {
     try {
       await signIn(email, password);
       router.push(redirectTo);
-    } catch (err: any) {
-      setError(err.message || "Falha ao fazer login");
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err.message : "Falha ao fazer login";
+      setError(error);
     }
   };
 

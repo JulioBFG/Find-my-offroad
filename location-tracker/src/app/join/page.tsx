@@ -38,8 +38,9 @@ export default function JoinGroupPage() {
       setTimeout(() => {
         router.push("/dashboard");
       }, 2000);
-    } catch (err: any) {
-      setError(err.message || "Falha ao entrar no grupo");
+    } catch (err: unknown) {
+      const error = err instanceof Error ? err.message : "Falha ao entrar no grupo";
+      setError(error);
     }
   };
 

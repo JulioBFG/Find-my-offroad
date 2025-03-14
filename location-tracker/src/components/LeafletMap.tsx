@@ -22,7 +22,6 @@ type LeafletMapProps = {
   user: FirebaseUser;
 };
 
-// Componente para atualizar a visualização do mapa
 const MapUpdater = ({ center }: MapUpdaterProps) => {
   const map = useMap();
 
@@ -35,17 +34,13 @@ const MapUpdater = ({ center }: MapUpdaterProps) => {
   return null;
 };
 
-// Função para criar um ícone de avatar com a primeira letra do nome
 const createAvatarIcon = (name: string) => {
-  // Obter a primeira letra e converter para maiúscula
   const initial = name.charAt(0).toUpperCase();
 
-  // Gerar uma cor baseada no nome para diferenciar usuários
   const colors = ['#4CAF50', '#2196F3', '#9C27B0', '#F44336', '#FF9800', '#795548'];
   const colorIndex = name.charCodeAt(0) % colors.length;
   const backgroundColor = colors[colorIndex];
 
-  // Criar um elemento div para o avatar
   const avatarHtml = `
     <div style="
       background-color: ${backgroundColor};
@@ -89,32 +84,38 @@ const LeafletMap: React.FC<LeafletMapProps> = ({
     const watchId = navigator.geolocation.watchPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        setUserPosition([latitude, longitude]);
+        const hasMoved =
+          Math.abs(latitude - userPosition[0]) > 0.0001 ||
+          Math.abs(longitude - userPosition[1]) > 0.0001 ||
+          userPosition[0] === 0;
 
-        const userLocRef = ref(database, `locations/${user.uid}`);
-        set(userLocRef, {
-          id: user.uid,
-          name: user.displayName || "Usuário",
-          groupId: user.groupId || "default",
-          latitude,
-          longitude,
-          lastUpdated: Date.now()
-        });
+        if (hasMoved) {
+          setUserPosition([latitude, longitude]);
+          const userLocRef = ref(database, `locations/${user.uid}`);
+          set(userLocRef, {
+            id: user.uid,
+            name: user.displayName || "Usuário",
+            groupId: user.groupId || "default",
+            latitude,
+            longitude,
+            lastUpdated: Date.now()
+          });
+        }
       },
       (error) => {
         console.error("Erro ao obter localização:", error);
       },
-      { enableHighAccuracy: true }
+      { enableHighAccuracy: true, maximumAge: 10000, timeout: 30000 }
     );
 
     return () => {
       if (watchId) navigator.geolocation.clearWatch(watchId);
     };
-  }, [user, isTracking, setUserPosition]);
+  }, [user, isTracking, setUserPosition, userPosition]);
 
   return (
     <MapContainer
-      center={userPosition[0] !== 0 ? userPosition : [-23.55052, -46.633308]} // São Paulo como padrão
+      center={userPosition[0] !== 0 ? userPosition : [-23.55052, -46.633308]}
       zoom={currentZoom}
       style={{ height: "100%", width: "100%" }}
       className="z-0"

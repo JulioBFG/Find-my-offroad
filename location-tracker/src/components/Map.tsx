@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useAuth } from "@/lib/auth-context";
 import { Button } from "@/components/ui/button";
-import { Share2, MapPin, MapPinOff } from "lucide-react";
+import { Share2, MapPin, MapPinOff, Check } from "lucide-react";
 import { ref, onValue } from "firebase/database";
 import { database } from "@/lib/firebase";
 
@@ -82,52 +82,43 @@ const Map = () => {
           <Button
             variant={isTracking ? "destructive" : "default"}
             onClick={() => setIsTracking(!isTracking)}
-            className="w-full mb-4 flex items-center justify-center"
-            size="lg"
+            className="h-12 w-12 rounded-full shadow-lg md:h-10 md:w-auto md:rounded-md md:px-4"
+            size="icon"
           >
             {isTracking ? (
               <>
-                <MapPinOff size={18} className="mr-2" />
-                Parar Rastreamento
+                <MapPinOff className="md:mr-2" size={20} />
+                <span className="hidden md:inline">Parar</span>
               </>
             ) : (
               <>
-                <MapPin size={18} className="mr-2" />
-                Iniciar Rastreamento
+                <MapPin className="md:mr-2" size={20} />
+                <span className="hidden md:inline">Rastrear</span>
               </>
             )}
           </Button>
 
-          <div className="border-t border-gray-200 my-3"></div>
 
-          {user.groupId ? (
-            <div>
-              <p className="text-sm font-medium mb-2">Compartilhe seu grupo:</p>
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={groupShareLink}
-                  readOnly
-                  className="text-xs bg-gray-100 p-2 rounded flex-1 overflow-hidden text-ellipsis"
-                />
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={copyShareLink}
-                  className="flex items-center shrink-0"
-                >
-                  <Share2 size={16} className="mr-1 md:block hidden" />
-                  {linkCopied ? "Copiado!" : "Copiar"}
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <p className="text-sm text-amber-600 font-medium">
-                Você ainda não está em um grupo.
-                Crie ou entre em um grupo para compartilhar sua localização.
-              </p>
-            </div>
+          {user.groupId && (
+            <Button
+              size="icon"
+              variant="secondary"
+              onClick={copyShareLink}
+              className="h-12 w-12 rounded-full shadow-lg md:h-10 md:w-auto md:rounded-md md:px-4"
+              title="Copiar link do grupo"
+            >
+              {linkCopied ? (
+                <>
+                  <Check className="md:mr-2" size={20} />
+                  <span className="hidden md:inline">Copiado</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="md:mr-2" size={20} />
+                  <span className="hidden md:inline">Compartilhar</span>
+                </>
+              )}
+            </Button>
           )}
         </div>
       </div>

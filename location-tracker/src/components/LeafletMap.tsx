@@ -1,4 +1,3 @@
-// src/components/Map/LeafletMap.tsx
 "use client";
 
 import React, { useEffect } from "react";

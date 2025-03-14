@@ -1,4 +1,3 @@
-// src/components/Map/index.tsx
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -8,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Share2, MapPin, MapPinOff, Check } from "lucide-react";
 import { ref, onValue } from "firebase/database";
 import { database } from "@/lib/firebase";
+import { useToast } from "./ui/use-toast";
 
 // Importação dinâmica do componente do mapa sem SSR
 const LeafletMap = dynamic(() => import("./LeafletMap"), {
@@ -32,6 +32,7 @@ export type User = {
 };
 
 const Map = () => {
+  const { toast } = useToast();
   const { user } = useAuth();
   const [groupUsers, setGroupUsers] = useState<User[]>([]);
   const [userPosition, setUserPosition] = useState<[number, number]>([0, 0]);
@@ -50,7 +51,27 @@ const Map = () => {
   const copyShareLink = () => {
     navigator.clipboard.writeText(groupShareLink);
     setLinkCopied(true);
+
+    toast({
+      title: "Link copiado!",
+      description: "O link do grupo foi copiado para a área de transferência.",
+      duration: 2000,
+    });
+
     setTimeout(() => setLinkCopied(false), 2000);
+  };
+
+  const toggleTracking = () => {
+    const newTrackingState = !isTracking;
+    setIsTracking(newTrackingState);
+
+    toast({
+      title: newTrackingState ? "Rastreamento iniciado" : "Rastreamento desligado",
+      description: newTrackingState
+        ? "Sua localização está sendo compartilhada com o grupo."
+        : "Sua localização não está mais sendo compartilhada.",
+      duration: 3000,
+    });
   };
 
   useEffect(() => {
@@ -77,13 +98,12 @@ const Map = () => {
 
   return (
     <div className="relative h-screen w-full">
-      <div className="fixed bottom-4 right-4 left-4 z-50 md:right-6 md:left-auto md:max-w-xs md:top-6 md:bottom-auto">
-        <div className="bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-xl border border-gray-200">
+      <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50 w-1/2">
+        <div className="bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-xl border border-gray-200 flex gap-3 justify-center">
           <Button
             variant={isTracking ? "destructive" : "default"}
-            onClick={() => setIsTracking(!isTracking)}
-            className="h-12 w-12 rounded-full shadow-lg md:h-10 md:w-auto md:rounded-md md:px-4"
-            size="icon"
+            onClick={toggleTracking}
+            className="h-12 rounded-full shadow-lg md:h-10 md:rounded-md md:px-4"
           >
             {isTracking ? (
               <>
@@ -98,13 +118,11 @@ const Map = () => {
             )}
           </Button>
 
-
           {user.groupId && (
             <Button
-              size="icon"
               variant="secondary"
               onClick={copyShareLink}
-              className="h-12 w-12 rounded-full shadow-lg md:h-10 md:w-auto md:rounded-md md:px-4"
+              className="h-12 rounded-full shadow-lg md:h-10 md:rounded-md md:px-4"
               title="Copiar link do grupo"
             >
               {linkCopied ? (

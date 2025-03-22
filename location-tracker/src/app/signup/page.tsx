@@ -62,7 +62,7 @@ export default function SignupPage() {
         <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Nome
+              Name
             </label>
             <input
               id="name"
@@ -90,7 +90,7 @@ export default function SignupPage() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Senha
+              Password
             </label>
             <input
               id="password"

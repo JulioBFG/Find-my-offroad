@@ -6,14 +6,14 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <header className="bg-white shadow p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold">Rastreador de Localização</h1>
+          <h1 className="text-xl font-bold">Location Tracker</h1>
 
           <div className="space-x-4">
             <Link href="/login">
               <Button variant="outline">Login</Button>
             </Link>
             <Link href="/signup">
-              <Button>Registrar</Button>
+              <Button className="bg-black text-white">Sign Up</Button>
             </Link>
           </div>
         </div>
@@ -21,22 +21,21 @@ export default function Home() {
 
       <main className="flex-1 flex items-center justify-center bg-gray-50">
         <div className="max-w-3xl p-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Acompanhe seu grupo em tempo real</h2>
+          <h2 className="text-3xl font-bold mb-4">Track your group's location in real-time</h2>
           <p className="text-lg mb-8">
-            Nosso aplicativo permite que grupos de pessoas acompanhem a localização
-            uns dos outros em tempo real. Perfeito para viagens, eventos e muito mais.
+            Our app allows groups of people to track each other's location in real-time. Perfect for trips, events, and more.
           </p>
 
           <div className="flex justify-center space-x-4">
             <Link href="/signup">
-              <Button size="lg">Começar Agora</Button>
+              <Button size="lg" className="bg-black text-white">Get Started</Button>
             </Link>
           </div>
         </div>
       </main>
 
       <footer className="bg-white p-4 text-center text-gray-600">
-        <p>&copy; {new Date().getFullYear()} Rastreador de Localização</p>
+        <p>&copy; {new Date().getFullYear()} Location Tracker</p>
       </footer>
     </div>
   );

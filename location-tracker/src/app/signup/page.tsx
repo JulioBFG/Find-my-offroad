@@ -1,4 +1,3 @@
-// src/app/signup/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -18,7 +17,6 @@ export default function SignupPage() {
   const router = useRouter();
   const [redirected, setRedirected] = useState(false);
 
-  // Extrair o parâmetro redirectTo da URL
   useEffect(() => {
     setIsClient(true);
 
@@ -31,7 +29,6 @@ export default function SignupPage() {
     }
   }, []);
 
-  // Redirecionar se já estiver autenticado
   useEffect(() => {
     if (user && isClient && !redirected) {
       setRedirected(true);
@@ -47,7 +44,7 @@ export default function SignupPage() {
       await signUp(email, password, name);
       router.push(redirectTo);
     } catch (err: unknown) {
-      const error = err instanceof Error ? err.message : "Falha ao criar conta";
+      const error = err instanceof Error ? err.message : "Failed to create account";
       setError(error);
     }
   };
@@ -56,8 +53,8 @@ export default function SignupPage() {
     <div className="flex min-h-screen items-center justify-center">
       <div className="w-full max-w-md p-4 md:p-8 space-y-6 rounded-xl shadow-lg">
         <div className="text-center">
-          <h1 className="text-xl md:text-2xl font-bold">Criar Conta</h1>
-          <p className="text-gray-600 text-sm md:text-base">Registre-se para começar a usar o sistema</p>
+          <h1 className="text-xl md:text-2xl font-bold">Create Account</h1>
+          <p className="text-gray-600 text-sm md:text-base">Register to start using the system</p>
         </div>
 
         {error && <div className="p-3 bg-red-100 text-red-600 rounded text-sm">{error}</div>}
@@ -107,20 +104,20 @@ export default function SignupPage() {
 
           <div>
             <Button type="submit" className="w-full">
-              Registrar
+              Register
             </Button>
           </div>
         </form>
 
         <div className="text-center mt-4">
           <p className="text-sm">
-            Já tem uma conta?{" "}
+            Already have an account?{" "}
             {isClient && (
               <Link
                 href={`/login?redirectTo=${encodeURIComponent(redirectTo)}`}
                 className="text-blue-600 hover:underline"
               >
-                Faça login
+                Login
               </Link>
             )}
           </p>

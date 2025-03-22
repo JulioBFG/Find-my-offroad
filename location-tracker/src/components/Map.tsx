@@ -9,14 +9,13 @@ import { ref, onValue } from "firebase/database";
 import { database } from "@/lib/firebase";
 import { useToast } from "./ui/use-toast";
 
-// Importação dinâmica do componente do mapa sem SSR
 const LeafletMap = dynamic(() => import("./LeafletMap"), {
   ssr: false,
   loading: () => (
     <div className="h-full w-full flex items-center justify-center bg-gray-100">
       <div className="text-center">
         <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-500 border-r-transparent"></div>
-        <p className="mt-2 text-sm text-gray-600">Carregando mapa...</p>
+        <p className="mt-2 text-sm text-gray-600">Loading Map...</p>
       </div>
     </div>
   ),
@@ -53,8 +52,8 @@ const Map = () => {
     setLinkCopied(true);
 
     toast({
-      title: "Link copiado!",
-      description: "O link do grupo foi copiado para a área de transferência.",
+      title: "Link copied!",
+      description: "The group link has been copied to the clipboard.",
       duration: 2000,
     });
 
@@ -66,10 +65,10 @@ const Map = () => {
     setIsTracking(newTrackingState);
 
     toast({
-      title: newTrackingState ? "Rastreamento iniciado" : "Rastreamento desligado",
+      title: newTrackingState ? "Tracking started" : "Tracking stopped",
       description: newTrackingState
-        ? "Sua localização está sendo compartilhada com o grupo."
-        : "Sua localização não está mais sendo compartilhada.",
+        ? "Your location is being shared with the group."
+        : "Your location is no longer being shared.",
       duration: 3000,
     });
   };
@@ -108,12 +107,12 @@ const Map = () => {
             {isTracking ? (
               <>
                 <MapPinOff className="md:mr-2" size={20} />
-                <span className="hidden md:inline">Parar</span>
+                <span className="hidden md:inline">Stop</span>
               </>
             ) : (
               <>
                 <MapPin className="md:mr-2" size={20} />
-                <span className="hidden md:inline">Rastrear</span>
+                <span className="hidden md:inline">Track</span>
               </>
             )}
           </Button>
@@ -123,17 +122,17 @@ const Map = () => {
               variant="secondary"
               onClick={copyShareLink}
               className="h-12 rounded-full shadow-lg md:h-10 md:rounded-md md:px-4"
-              title="Copiar link do grupo"
+              title="Copy Group Link"
             >
               {linkCopied ? (
                 <>
                   <Check className="md:mr-2" size={20} />
-                  <span className="hidden md:inline">Copiado</span>
+                  <span className="hidden md:inline">Copied!</span>
                 </>
               ) : (
                 <>
                   <Share2 className="md:mr-2" size={20} />
-                  <span className="hidden md:inline">Compartilhar</span>
+                  <span className="hidden md:inline">Share</span>
                 </>
               )}
             </Button>

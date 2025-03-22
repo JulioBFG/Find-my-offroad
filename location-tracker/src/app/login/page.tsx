@@ -1,4 +1,3 @@
-// src/app/login/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -17,7 +16,6 @@ export default function LoginPage() {
   const router = useRouter();
   const [redirected, setRedirected] = useState(false);
 
-  // Extrair o parâmetro redirectTo da URL
   useEffect(() => {
     setIsClient(true);
 
@@ -30,7 +28,6 @@ export default function LoginPage() {
     }
   }, []);
 
-  // Redirecionar se já estiver autenticado
   useEffect(() => {
     if (user && isClient && !redirected) {
       setRedirected(true);
@@ -56,7 +53,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md p-4 md:p-8 space-y-6 rounded-xl shadow-lg">
         <div className="text-center">
           <h1 className="text-xl md:text-2xl font-bold">Login</h1>
-          <p className="text-gray-600 text-sm md:text-base">Acesse sua conta para rastrear sua localização</p>
+          <p className="text-gray-600 text-sm md:text-base">Enter your account to track your location</p>
         </div>
 
         {error && <div className="p-3 bg-red-100 text-red-600 rounded text-sm">{error}</div>}
@@ -91,21 +88,21 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <Button type="submit" className="w-full">
-              Entrar
+            <Button type="submit" className="w-full bg-black text-white">
+              Login
             </Button>
           </div>
         </form>
 
         <div className="text-center mt-4">
           <p className="text-sm">
-            Não tem uma conta?{" "}
+            Don't have an account?{" "}
             {isClient && (
               <Link
                 href={`/signup?redirectTo=${encodeURIComponent(redirectTo)}`}
                 className="text-blue-600 hover:underline"
               >
-                Registre-se
+                Sign Up
               </Link>
             )}
           </p>

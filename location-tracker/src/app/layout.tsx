@@ -7,8 +7,8 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Rastreador de Localização",
-  description: "Acompanhe a localização do seu grupo em tempo real",
+  title: "Location Tracker",
+  description: "Track your group's location in real-time",
 };
 
 export default function RootLayout({
@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
+    <html lang="en-US">
       <body className={inter.className}>
         <AuthProvider>{children}<Toaster /></AuthProvider>
       </body>

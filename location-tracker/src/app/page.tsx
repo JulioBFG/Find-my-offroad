@@ -21,9 +21,9 @@ export default function Home() {
 
       <main className="flex-1 flex items-center justify-center bg-gray-50">
         <div className="max-w-3xl p-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Track your group's location in real-time</h2>
+          <h2 className="text-3xl font-bold mb-4">Track your group&apos;s location in real-time</h2>
           <p className="text-lg mb-8">
-            Our app allows groups of people to track each other's location in real-time. Perfect for trips, events, and more.
+            Our app allows groups of people to track each other&apos;s location in real-time. Perfect for trips, events, and more.
           </p>
 
           <div className="flex justify-center space-x-4">

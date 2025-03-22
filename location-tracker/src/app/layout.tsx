@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
 import { Toaster } from "@/components/ui/toaster";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en-US">
       <body className={inter.className}>
-        <AuthProvider>{children}<Toaster /></AuthProvider>
+        <AuthProvider>
+          {children}<Toaster />
+          <SpeedInsights />
+        </AuthProvider>
       </body>
     </html>
   );
